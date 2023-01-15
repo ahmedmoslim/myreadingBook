@@ -25,7 +25,20 @@ console.log(category)
       }).then((res) => res.json());
         return books
 });
-
+export const bookSearch = createAsyncThunk<BookBase[], any>("books/bookSearch", async ({ query }) => {
+    const {baseUrl, headers} = Api();
+    const searchResult = await fetch(`${baseUrl}/search`, {
+        method: "POST",
+        headers: {
+          ...headers,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ query, maxResults:10 }),
+      })
+        .then((res) => res.json())
+        .then((data) => data.books);
+        return searchResult;
+});
 export const getBook = createAsyncThunk<BookBase, any>("books/getBook", async ({bookId}) => {
     const {baseUrl, headers} = Api();
 
@@ -39,7 +52,8 @@ const bookSlice = createSlice({
     name: "books",
     initialState: {
         books:[] as BookBase[],
-        book:{} as BookBase
+        book:{} as BookBase,
+        searchResultBooks:[] as BookBase[] 
     },
     reducers: {
         changeCategory: (state, action) => {
@@ -65,6 +79,13 @@ const bookSlice = createSlice({
         })
         builder.addCase(getBook.fulfilled,(state, action:PayloadAction<BookBase>)=>{
             state.book = action.payload as BookBase
+        })
+        builder.addCase(bookSearch.pending,(state, action)=>{
+            console.log("searching books...");
+        })
+        builder.addCase(bookSearch.fulfilled,(state, action)=>{
+            console.log(action.payload)
+            state.searchResultBooks = action.payload
         })
     }
 })

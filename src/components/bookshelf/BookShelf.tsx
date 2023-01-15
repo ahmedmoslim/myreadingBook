@@ -6,13 +6,13 @@ import BookCard from '../bookcard/BookCard';
 export const BookShelf = ({ books, shelf }: { books: BookBase[], shelf?: string }) => {
 
   const shlfedBooks =shelf!==undefined? books.filter(book => book.shelf === shelf):books;
-
+console.log(shlfedBooks)
   return (
     <>
 
-      <h2>{shelf}</h2>
+      {shelf && <h2>{shelf}</h2>}
       
-      {shlfedBooks.map((book, index) =>
+      {Array.isArray(shlfedBooks)  && shlfedBooks.map((book, index) =>
         <BookCard book={book} key={book.id} />
       )} 
      

@@ -10,7 +10,7 @@ import { MockBooks } from '../../MockBooks'
 import { BookBase } from '../../models/BookBase'
 
 test("test book search ", async () => {
-    const mockStore = getMockedState({ books: { books: MockBooks.books as BookBase[], book: {} as BookBase} });
+    const mockStore = getMockedState({ books:  {searchResultBooks:[] as BookBase[], books: MockBooks.books as BookBase[], book: {} as BookBase} });
 
     render(<Provider store={mockStore}>
         <Router>
